@@ -2,10 +2,11 @@ require 'autosuggest'
 require_relative '../../config/initializers/function_words'
 
 class AutosuggestService
-  def initialize
+  def initialize(word_start)
     # we might have to limit this to prefix matched words because right now we're just sending all the data to
     # the front end
-    top_queries = Hash[WordFrequency.pluck(:name, :frequency)]
+    prefix = word_start
+    top_queries = Hash[WordFrequency.where("name LIKE ?","#{prefix}%").pluck(:name, :frequency)]
     @autosuggest = Autosuggest.new(top_queries)
     @autosuggest.blacklist_words FUNCTION_WORDS
   end

@@ -44,10 +44,12 @@ module Types
     end
 
 
-    field :autosuggest, [SuggestionType], 'recommended words', null:false
+    field :autosuggest, [SuggestionType], 'recommended words', null:false do
+      argument :prefix, type:String, required:false
+    end
 
-    def autosuggest
-      suggest_service = AutosuggestService.new
+    def autosuggest(prefix:"")
+      suggest_service = AutosuggestService.new(prefix)
       suggest_service.words
     end
 
@@ -123,10 +125,6 @@ module Types
 
       JSON.parse(link.long).deep_symbolize_keys
     end
-
-    def autosuggestions
-      autosuggest = AutosuggestService.new
-      autosuggest.suggestions
 
     def workflows_view
       WorkflowsView.instance.view
