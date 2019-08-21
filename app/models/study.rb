@@ -369,4 +369,16 @@ class Study < AactRecord # rubocop:disable Metrics/ClassLength
       Study.search_index.reindex_queue.push(id)
     end
   end
+
+  def self.to_csv
+    require "csv"
+    CSV.open("csv/file.csv", 'wb') do |csv|
+      csv << column_names
+      all.each do |study|
+        csv << study.attributes.values
+      end
+    end
+  end
+
+
 end
