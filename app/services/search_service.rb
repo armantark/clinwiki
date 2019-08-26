@@ -251,15 +251,5 @@ class SearchService # rubocop:disable Metrics/ClassLength
   def letter?(char)
     char =~ /[[:alpha:]]/
   end
-  def to_csv
-    require "csv"
-    studies = Study.all
-    CSV.open("csv/file.csv", "wb") do |csv|
-      csv << Study.column_names
-      studies.each do |study|
-        csv << study.attributes
-      end
-    end
-  end
 
 end

@@ -372,10 +372,15 @@ class Study < AactRecord # rubocop:disable Metrics/ClassLength
 
   def self.to_csv
     require "csv"
+    default_args = ['nct_id', 'average_rating', 'brief_title', 'overall_status', 'start_date', 'completion_date']
     CSV.open("csv/file.csv", 'wb') do |csv|
-      csv << column_names
-      all.each do |study|
-        csv << study.attributes.values
+      csv << default_args
+      default_args.delete('average_rating')
+      order("RANDOM()").limit(1).select(default_args).each do |study|
+
+        values = study.attributes.values_at(*default_args)
+        values.insert(1, study.average_rating)
+        csv << values
       end
     end
   end
